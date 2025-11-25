@@ -37,7 +37,7 @@ def search_faiss(query_vector, index, top_k=3):
     distances, indices = index.search(query_vector, top_k)
     return distances[0], indices[0]
 
-def retrieve(query):
+def retrieve(query, top_k=3):
     load_dotenv()
     api_key = os.getenv("GOOGLE_API_KEY")
     cl = client.Client(api_key=api_key)
@@ -49,7 +49,7 @@ def retrieve(query):
     query_vector = embed_query(query, cl)
 
     # Search FAISS
-    distances, indices = search_faiss(query_vector, index, top_k=3)
+    distances, indices = search_faiss(query_vector, index, top_k=top_k)
 
     # Build results
     results = []
