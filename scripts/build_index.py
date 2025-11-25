@@ -61,6 +61,27 @@ def main():
 
     # We will add embedding + FAISS code here later
     # For now we are just checking that loading works.
+    # -----------------------------
+    # Build FAISS index
+    # -----------------------------
+    dimension = embed_array.shape[1]   # size of embedding (e.g., 768)
+    index = faiss.IndexFlatL2(dimension)
+
+    # Add embeddings to FAISS
+    index.add(embed_array)
+
+    # Save FAISS index
+    faiss.write_index(index, INDEX_PATH)
+    print("FAISS index saved to", INDEX_PATH)
+
+    # -----------------------------
+    # Save metadata (chunk_id + text)
+    # -----------------------------
+    with open(METADATA_PATH, "w", encoding="utf-8") as f:
+        json.dump(metadata, f, indent=2)
+
+    print("Metadata saved to", METADATA_PATH)
+
 
 
 if __name__ == "__main__":
