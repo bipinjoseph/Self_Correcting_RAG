@@ -34,6 +34,31 @@ def main():
     records = load_chunks()
     print("Loaded", len(records), "chunks from", CHUNKS_PATH)
 
+    embeddings = []
+    metadata = []
+
+    for record in records:
+        text = record["text"]
+
+        # Call Gemini Embedding API
+        response = cl.models.embed_content(
+            model=EMBED_MODEL,
+            contents=text
+        )
+
+        # Extract the vector from the response
+        vector = response.embeddings[0].values
+
+        embeddings.append(vector)
+        metadata.append({
+            "chunk_id": record["chunk_id"],
+            "text": text
+        })
+
+    embed_array = np.array(embeddings).astype("float32")
+    print("Embedding array shape:", embed_array.shape)
+
+
     # We will add embedding + FAISS code here later
     # For now we are just checking that loading works.
 
